@@ -1,56 +1,68 @@
+import { Action, GlobalState, Item } from './interfaces'
 
-export const Reducer = (state = { card: [], favorite: [] }, action) => {
-    let index, Item;
 
+export const Reducer = (state: GlobalState = { card: [], favorite: [], products: [] }, action: Action): GlobalState => {
+    let index, card;
+
+    console.log(action);
     switch (action.type) {
         case 'addItem':
 
             //if there is a product increase the count if not add it to the products
-            index = state.card.findIndex((e) => e.id === action.payloads.id);
+            index = state.card.findIndex((e: Item) => e.id === action.payloads.id);
             console.log({ index });
             if (index !== -1)
-                Item = state.card.map((e) => {
+                card = state.card.map((e: Item) => {
                     if (e.id === action.payloads.id) e.cnt++;
                     return e;
                 });
-            else Item = [...state.card, { ...action.payloads, cnt: 1 }];
+            else card = [...state.card, { ...action.payloads, cnt: 1 }];
             return {
-                card: Item,
-                favorite: state.favorite,
+                ...state,
+                card: card
             };
         //remove item or decrease count
         case 'removeOneItem':
-            if (action.payloads.cnt > 1)
-                Item = state.card.map((e) => {
+            const item = state.card.find(e => e.id === action.payloads.id)!
+            if (item.cnt > 1)
+                card = state.card.map((e: Item) => {
                     if (e.id === action.payloads.id) e.cnt--;
                     return e;
                 });
-            else Item = state.card.filter((e) => e.id !== action.payloads.id);
+            else card = state.card.filter((e: Item) => e.id !== action.payloads.id);
+
             return {
-                card: Item,
-                favorite: state.favorite,
+                ...state,
+                card,
             };
-        //remove the whole products 
+        //remove the whole products     
 
         case 'removeItem':
             return {
-                card: state.card.filter((e) => e.id !== action.payloads.id),
-                favorite: state.favorite,
+                ...state,
+                card: state.card.filter((e: Item) => e.id !== action.payloads.id),
+
             };
         // add products to the favorite
         case 'addFavorite':
             return {
-                card: state.card,
-                favorite: [...state.favorite, action.payloads],
+                ...state,
+                favorite: [...state.favorite, action.payloads.id],
             };
         // remove a products from favorite
         case 'removeFavorite':
             return {
-                card: [...state.card],
+                ...state,
                 favorite: state.favorite.filter(
-                    (e) => e.id !== action.payloads.id
+                    (e: number) => e !== action.payloads.id
                 ),
             };
+
+        case 'addProducts':
+            return {
+                ...state,
+                products: [...state.products, ...action.payloads]
+            }
 
         default:
             return state;

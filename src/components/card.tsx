@@ -1,3 +1,7 @@
+import { Item, Product, GlobalState } from '../interfaces'
+
+import React from 'react'
+
 import {
     makeStyles,
     IconButton,
@@ -26,35 +30,31 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const addFavorite = (item) => {
+const addFavorite = (item: Product) => {
     return { type: 'addFavorite', payloads: item };
 };
 
-const removeFavorite = (id) => {
-    return { type: 'removeFavorite', id };
+const removeFavorite = (id: number) => {
+    return { type: 'removeFavorite', payloads: id };
 };
-const AddItem = (item) => {
+const AddItem = (item: Item) => {
     return { type: 'addItem', payloads: item }
 }
-const removeItem = (id) => {
-    return { type: 'removeItem', id }
-}
 
-function CardComponent({ info, state, dispatch }) {
+const CardComponent: React.FC<{ info: any, state: GlobalState, dispatch: (a: any) => void }> = ({ info, state, dispatch }) => {
     const classes = useStyles();
-    const [isAddedFav, toggle]: [boolean, () => void] = toggleButton();
+    const [isAddedFav, toggle]: [boolean, () => void] = toggleButton(state.favorite.includes(info.id));
 
     //add fav
     const handleClick = () => {
-        if (isAddedFav)
-            dispatch(AddItem(info))
-
+        dispatch(AddItem(info))
     };
     const handleAddFav = () => {
         if (isAddedFav)
-            dispatch(addFavorite(info))
+            dispatch(removeFavorite(info.id))
         else
-            dispatch(removeFavorite(info))
+            dispatch(addFavorite(info))
+        toggle();
     }
 
     return (
@@ -72,10 +72,10 @@ function CardComponent({ info, state, dispatch }) {
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <IconButton color="primary" onClick={() => handleClick()}>
+                    <IconButton color="primary" onClick={() => handleAddFav()}>
                         {isAddedFav ? <Favorite /> : <FavoriteBorderOutlined />}
                     </IconButton>
-                    <IconButton color="primary" onClick={() => handleAddFav()}>
+                    <IconButton color="primary" onClick={() => handleClick()}>
                         <Add />
                     </IconButton>
                 </CardActions>
@@ -84,5 +84,8 @@ function CardComponent({ info, state, dispatch }) {
     );
 }
 
+const mapStateToProps = (state: GlobalState, ownProps: any) => {
+    return { state }
+}
 
-export default connect()(CardComponent);
+export default connect(mapStateToProps)(CardComponent);
