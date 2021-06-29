@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
-  
+
     title: {
         flexGrow: 1,
     },
@@ -42,8 +42,5 @@ function HomePage({ state }) {
     );
 }
 
-const mapStateToProps = (state, ownProps) => {
-    return { state };
-};
 
-export default connect(mapStateToProps)(HomePage);
+export default connect()(HomePage);

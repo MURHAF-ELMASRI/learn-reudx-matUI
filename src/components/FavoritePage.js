@@ -2,7 +2,7 @@
 import {
     Grid,
     Card,
-    
+
     CardMedia,
     CardHeader,
     CardActions,
@@ -14,7 +14,6 @@ import {
 import { connect } from 'react-redux';
 import { Cancel } from '@material-ui/icons';
 
-import {addFavorite,removeFavorite } from './action';
 const useStyles = makeStyles((theme) => ({
     media: {
         width: 100,
@@ -53,7 +52,6 @@ function FavoritePage({ state, dispatch }) {
                                     action={
                                         <IconButton
                                             onClick={() => {
-                                                dispatch(removeFavorite(e));
                                             }}
                                         >
                                             <Cancel />

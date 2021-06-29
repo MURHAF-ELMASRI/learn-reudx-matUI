@@ -14,7 +14,6 @@ import {
 import { connect } from 'react-redux';
 import { DeleteForever, ArrowBackIos } from '@material-ui/icons';
 
-import {removeItem,removeOneItem,addItem} from './action'
 const useStyles = makeStyles((theme) => ({
     media: {
         width: 100,
@@ -33,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     action: {
         position: 'absolute',
         top: 50,
-        right:12
+        right: 12
     },
 }));
 
@@ -53,7 +52,6 @@ function CardPage({ state, dispatch }) {
                                     action={
                                         <IconButton
                                             onClick={() => {
-                                                dispatch(removeItem(e));
                                             }}
                                         >
                                             <DeleteForever />
@@ -73,7 +71,6 @@ function CardPage({ state, dispatch }) {
                                     >
                                         <IconButton
                                             onClick={() => {
-                                                dispatch(addItem(e));
                                             }}
                                         >
                                             <ArrowBackIos
@@ -87,7 +84,6 @@ function CardPage({ state, dispatch }) {
                                         </Box>
                                         <IconButton
                                             onClick={() => {
-                                                dispatch(removeOneItem(e));
                                             }}
                                         >
                                             <ArrowBackIos
@@ -109,11 +105,11 @@ function CardPage({ state, dispatch }) {
                     >
                         Card is empty
                     </Typography>
-                    )}
+                )}
                 <Grid xs={4} >
                     {
-                        state.card.length!==0 &&( <Typography variant='h3'>
-                        Total:{state.card.reduce((count,e)=>e.price*e.cnt+count,0)}
+                        state.card.length !== 0 && (<Typography variant='h3'>
+                            Total:{state.card.reduce((count, e) => e.price * e.cnt + count, 0)}
                         </Typography>)
                     }
                 </Grid>

@@ -34,28 +34,29 @@ const removeFavorite = (id) => {
     return { type: 'removeFavorite', id };
 };
 const AddItem = (item) => {
-    return {type:'addItem',payloads:item}
+    return { type: 'addItem', payloads: item }
 }
 const removeItem = (id) => {
-    return {type:'removeItem',id}    
+    return { type: 'removeItem', id }
 }
 
 function CardComponent({ info, state, dispatch }) {
     const classes = useStyles();
-    const [toggle, isToggleOn] = toggleButton();
+    const [isAddedFav, toggle]: [boolean, () => void] = toggleButton();
 
+    //add fav
     const handleClick = () => {
-        //  console.log(toggle)
-        if (isToggleOn)
-            dispatch(removeFavorite(info.id));
-        else
-            dispatch(addFavorite(info));
+        if (isAddedFav)
+            dispatch(AddItem(info))
 
-        toggle();
     };
-    const handleAdd =() => {
-        dispatch(AddItem(info))
+    const handleAddFav = () => {
+        if (isAddedFav)
+            dispatch(addFavorite(info))
+        else
+            dispatch(removeFavorite(info))
     }
+
     return (
         <Grid item xs={4} className={classes.root}>
             <Card className={classes.Card}>
@@ -72,9 +73,9 @@ function CardComponent({ info, state, dispatch }) {
                 </CardContent>
                 <CardActions>
                     <IconButton color="primary" onClick={() => handleClick()}>
-                        {isToggleOn ? <Favorite /> : <FavoriteBorderOutlined />}
+                        {isAddedFav ? <Favorite /> : <FavoriteBorderOutlined />}
                     </IconButton>
-                    <IconButton color="primary" onClick={() => handleAdd()}>
+                    <IconButton color="primary" onClick={() => handleAddFav()}>
                         <Add />
                     </IconButton>
                 </CardActions>
@@ -83,8 +84,5 @@ function CardComponent({ info, state, dispatch }) {
     );
 }
 
-const mapStateToProps = (state, ownProps) => {
-    return { state };
-};
 
-export default connect(mapStateToProps)(CardComponent);
+export default connect()(CardComponent);

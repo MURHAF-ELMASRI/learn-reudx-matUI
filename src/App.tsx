@@ -7,29 +7,31 @@ import { createStore } from 'redux';
 import { devToolsEnhancer } from 'redux-devtools-extension';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { ThemeProvider, createMuiTheme, Paper } from '@material-ui/core';
-import { blue,red} from '@material-ui/core/colors';
+import { blue, red } from '@material-ui/core/colors';
 import { Reducer } from './Reducer';
 import { useState } from 'react';
-const store = createStore(Reducer, devToolsEnhancer());
+
+
+const store = createStore(Reducer);
 
 export default function App() {
     const [isDark, setDark] = useState(false);
 
     const darkTheme = createMuiTheme({
         palette: {
-            type:'light',
-            primary:blue
+            type: 'light',
+            primary: blue
         },
     });
 
     const lightTheme = createMuiTheme({
         palette: {
-            type:'dark',
+            type: 'dark',
             primary: red
         },
     });
     return (
-        <ThemeProvider theme={isDark?darkTheme:lightTheme}>
+        <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
             <Paper>
                 <ReduxProvider store={store}>
                     <BrowserRouter>
