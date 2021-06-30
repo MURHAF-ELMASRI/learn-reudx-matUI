@@ -8,33 +8,11 @@ export const Reducer = (state: GlobalState = { card: [], favorite: [], products:
     switch (action.type) {
         case 'addItem':
 
-            //if there is a product increase the count if not add it to the products
-            index = state.card.findIndex((e: Item) => e.id === action.payloads.id);
-            console.log({ index });
-            if (index !== -1)
-                card = state.card.map((e: Item) => {
-                    if (e.id === action.payloads.id) e.cnt++;
-                    return e;
-                });
-            else card = [...state.card, { ...action.payloads, cnt: 1 }];
-            return {
-                ...state,
-                card: card
-            };
+        //if there is a product increase the count if not add it to the products
+
         //remove item or decrease count
         case 'removeOneItem':
-            const item = state.card.find(e => e.id === action.payloads.id)!
-            if (item.cnt > 1)
-                card = state.card.map((e: Item) => {
-                    if (e.id === action.payloads.id) e.cnt--;
-                    return e;
-                });
-            else card = state.card.filter((e: Item) => e.id !== action.payloads.id);
 
-            return {
-                ...state,
-                card,
-            };
         //remove the whole products     
 
         case 'removeItem':

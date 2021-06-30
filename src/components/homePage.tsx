@@ -1,50 +1,51 @@
-import { makeStyles, Grid, CircularProgress } from '@material-ui/core';
-import Card from './card';
-import { connect } from 'react-redux';
-import React, { useEffect, useState } from 'react';
-import { GlobalState } from '../interfaces';
-import axios from 'axios';
+import { makeStyles, Grid, CircularProgress } from "@material-ui/core";
+import Card from "./card";
+import { connect, useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { GlobalState, Product } from "../interfaces";
+import axios from "axios";
+import { addProducts } from "../features/product/productSlice";
+import { useAppSelector } from "../hooks/hooks";
 
 const useStyles = makeStyles((theme) => ({
+  title: {
+    flexGrow: 1,
+  },
 
-    title: {
-        flexGrow: 1,
-    },
-
-    main: {
-        marginTop: theme.spacing(3),
-        margin: 'auto',
-    },
+  main: {
+    marginTop: theme.spacing(3),
+    margin: "auto",
+  },
 }));
 
-const HomePage: React.FC<{ state: GlobalState, dispatch: (a: any) => void }> = ({ state = { card: [], products: [], favorite: [] }, dispatch }) => {
+const HomePage = () => {
+  const classes = useStyles();
+  const dispatch = useDispatch();
+  const products = useAppSelector((state) => state.products);
 
-    const classes = useStyles();
-    useEffect(() => {
-        console.log(state);
-        axios
-            .get('https://fakestoreapi.com/products')
-            .then((res) => {
-                console.log(res.data)
-                dispatch({ type: 'addProducts', payloads: res.data })
-            })
-            .catch((err) => console.log(err));
-    }, []);
+  useEffect(() => {
+    axios
+      .get("https://fakestoreapi.com/products")
+      .then((res) => {
+        dispatch(addProducts(res.data));
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
-    return (
-        <>
-            <Grid container className={classes.main} color="dark">
-                {state.products.length ? (
-                    state.products.map((info) => <Card key={info.id} info={info} />)
-                ) : (
-                    <CircularProgress style={{ margin: '5rem auto' }} />
-                )}
-            </Grid>
-        </>
-    );
-}
+  return (
+    <>
+      <Grid container className={classes.main} color="dark">
+        {products.length ? (
+          products.map((info: Product) => <Card key={info.id} info={info} />)
+        ) : (
+          <CircularProgress style={{ margin: "5rem auto" }} />
+        )}
+      </Grid>
+    </>
+  );
+};
 const mapStateToProps = (state: GlobalState, ownProps: any) => {
-    return { state }
-}
+  return { state };
+};
 
-export default connect(mapStateToProps)(HomePage);
+export default HomePage;
